@@ -1,1 +1,10 @@
-<p>dashboard works!</p>
+<section data-component="app-dashboard">
+    <label>Total Coins ({{ coins.length }})</label>
+    <div *ngFor="let coin of filteredCoins">
+        <label>{{ coin.id }}</label> = 
+        <label>{{ coin.current_price | indian }}</label>
+        <label>{{ coin.high_24h | indian }}</label>
+        <label>{{ coin.low_24h | indian }}</label>
+        <label>{{ coin.price_change_percentage_24h | number : '.0-2' }}%</label>
+    </div>
+</section>

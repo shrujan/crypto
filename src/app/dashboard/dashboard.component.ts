@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DashboardService } from '../services/dashboard/dashboard.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -6,13 +7,20 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
+  coins: any;
+  filteredCoins: any;
 
-  constructor() { }
+  constructor(private dashboardService: DashboardService) { }
 
   ngOnInit(): void {
+    this.getCoinData();
   }
 
   getCoinData() {
-    
+    console.log('coins')
+    this.dashboardService.getCoinsInfoInr().subscribe((data) => {
+      this.coins = data;
+      this.filteredCoins = data;
+    });
   }
 }
