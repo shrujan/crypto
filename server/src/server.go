@@ -6,6 +6,9 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/smtp"
+
+	// "github.com/gorilla/websocket"
 )
 
 // "github.com/gorilla/websocket"
@@ -42,6 +45,7 @@ func main() {
 	})
 
 	http.HandleFunc("/getMarketInfows", func(w http.ResponseWriter, r *http.Request) {
+		
 
 		// var conn, _ = upgrader.Upgrade(w, r, nil)
 		// go func(conn *websocket.Conn) {
@@ -52,6 +56,39 @@ func main() {
 		// 	}
 		// }(conn)
 
+	})
+
+	http.HandleFunc("/sendmail", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			fmt.Fprintf(w, "Post method only")
+			return
+		}
+		// Sender data.
+		from := "shrujantestmail@gmail.com"
+		password := "yqqpxjuwbjmstrah"
+	  
+		// Receiver email address.
+		to := []string{
+		  "shrork@gmail.com",
+		}
+	  
+		// smtp server configuration.
+		smtpHost := "smtp.gmail.com"
+		smtpPort := "587"
+	  
+		// Message.
+		message := []byte("This is a test email message.")
+		
+		// Authentication.
+		auth := smtp.PlainAuth("", from, password, smtpHost)
+		
+		// Sending email.
+		err := smtp.SendMail(smtpHost+":"+smtpPort, auth, from, to, message)
+		if err != nil {
+		  fmt.Println(err)
+		  return
+		}
+		fmt.Fprintf(w, "Success")
 	})
 
 	log.Fatal(http.ListenAndServe(":8081", nil))

@@ -1,0 +1,39 @@
+@mixin hideFavorite($icon1: 1, $icon2: 0) {
+  > mat-icon {
+    opacity: $icon1;
+    & + mat-icon {
+      opacity: $icon2;
+      color: red;
+    }
+  }
+}
+section[data-component="app-dashboard"] {
+    > span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 50px;
+    }
+    > table {
+        width: 100%;
+        tr {
+          &.mat-header-row > th {
+            background-color: aliceblue;
+          }
+          > td {
+            @include hideFavorite();
+            transition: opacity 400ms;
+            position: relative;
+            > mat-icon, mat-icon + mat-icon {
+              position: absolute;
+              cursor: pointer;
+              right: 50%;
+              top: 30%;
+            }
+            &.favorite {
+              @include hideFavorite($icon1: 0, $icon2: 1);
+            }
+          }
+        }
+    }
+}

@@ -18,6 +18,11 @@ export class DashboardService {
     //   sparkline: false
     // }
     // return this.http.get(url, { params: param });
+    let url = `${ this.baseUrl }/getMarketInfo`;
+    return this.http.get(url);
+  }
+
+  sendMail() {
     let url = `${ this.baseUrl }/getMarketInfows`;
     return this.http.get(url);
   }

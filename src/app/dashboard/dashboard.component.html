@@ -1,10 +1,55 @@
 <section data-component="app-dashboard">
-    <label>Total Coins ({{ coins.length }})</label>
-    <div *ngFor="let coin of filteredCoins">
-        <label>{{ coin.id }}</label> = 
-        <label>{{ coin.current_price | indian }}</label>
-        <label>{{ coin.high_24h | indian }}</label>
-        <label>{{ coin.low_24h | indian }}</label>
-        <label>{{ coin.price_change_percentage_24h | number : '.0-2' }}%</label>
-    </div>
+  <span>
+    <label>Enter Email</label>
+    <input type="text" placeholder="Enter Email">
+  </span>
+  <div>
+    <label>Total Coins ({{ filteredCoins?.length }})</label>
+  </div>
+  <table mat-table [dataSource]="filteredCoins" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="Favorites">
+      <th mat-header-cell *matHeaderCellDef> Favorites </th>
+      <td [class.favorite]="element.favorite"  (click)="setFavorite(element)" mat-cell *matCellDef="let element">
+        <mat-icon>favorite_border</mat-icon>
+        <mat-icon>favorite</mat-icon>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Coin">
+      <th mat-header-cell *matHeaderCellDef> Coin </th>
+      <td mat-cell *matCellDef="let element"> {{ element.id }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Price">
+      <th mat-header-cell *matHeaderCellDef> Price </th>
+      <td mat-cell *matCellDef="let element"> {{ element.current_price | indian }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="24 High">
+      <th mat-header-cell *matHeaderCellDef> 24 High </th>
+      <td mat-cell *matCellDef="let element"> {{ element.high_24h | indian }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="24 Low">
+      <th mat-header-cell *matHeaderCellDef> 24 Low </th>
+      <td mat-cell *matCellDef="let element"> {{ element.low_24h | indian }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Change %">
+      <th mat-header-cell *matHeaderCellDef> Change % </th>
+      <td mat-cell *matCellDef="let element"> {{ element.price_change_percentage_24h | number : '.0-2' }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Purchased">
+      <th mat-header-cell *matHeaderCellDef> Purchased </th>
+      <td mat-cell *matCellDef="let element">
+        <input matInput placeholder="Purchased Price" (keyup)="savePurchasedPrice(element)" [(ngModel)]="element.purchasedPrice">
+        <span> {{ (element.differenceFromPurchase || 0) | number : '.0-2' }} %</span>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
 </section>
