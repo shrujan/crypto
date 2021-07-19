@@ -45,7 +45,7 @@
       <th mat-header-cell *matHeaderCellDef> Purchased </th>
       <td mat-cell *matCellDef="let element">
         <input matInput placeholder="Purchased Price" (keyup)="savePurchasedPrice(element)" [(ngModel)]="element.purchasedPrice">
-        <span> {{ (element.differenceFromPurchase || 0) | number : '.0-2' }} %</span>
+        <span> {{ (element.differenceFromPurchase || 0) | number : '.0-6' }} %</span>
       </td>
     </ng-container>
 
