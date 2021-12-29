@@ -1,3 +1,32 @@
 <section>
   <crypto-header></crypto-header>
+  <main>
+    <div>
+      <label>Select User</label>
+      <mat-form-field>
+        <mat-label>Users</mat-label>
+        <mat-select [(ngModel)]="selected">
+          <mat-option *ngFor="let user of userList" [value]="user">{{user.UserName | titlecase}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div>
+      <label>Coin Name</label>
+      <input type="text">
+    </div>
+    <div>
+      <label>Purchased Price</label>
+      <input type="text">
+    </div>
+    <div>
+      <label>Total Amount</label>
+      <input type="text">
+    </div>
+    <div>
+      <label>Quantity</label>
+      <input type="text">
+    </div>
+    
+    <button (click)="saveDetails()">Save</button>
+  </main>
 </section>
