@@ -12,6 +12,7 @@ import { IndianPipe } from './pipes/indian.pipe';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HeaderComponent } from './header/header.component';
 import { InputFormComponent } from './input-form/input-form.component';
+import { MaterialModule } from './shared/material.module';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { InputFormComponent } from './input-form/input-form.component';
     HttpClientModule,
     MatIconModule,
     MatTableModule,
+    MaterialModule
   ],
   providers: [],
   bootstrap: [AppComponent]
