@@ -10,12 +10,16 @@ import { AppComponent } from './app.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { IndianPipe } from './pipes/indian.pipe';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HeaderComponent } from './header/header.component';
+import { InputFormComponent } from './input-form/input-form.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     DashboardComponent,
-    IndianPipe
+    IndianPipe,
+    HeaderComponent,
+    InputFormComponent
   ],
   imports: [
     AppRoutingModule,
