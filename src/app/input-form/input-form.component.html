@@ -1,32 +1,42 @@
 <section>
   <crypto-header></crypto-header>
   <main>
-    <div>
-      <label>Select User</label>
-      <mat-form-field>
-        <mat-label>Users</mat-label>
-        <mat-select [(ngModel)]="selected">
-          <mat-option *ngFor="let user of userList" [value]="user">{{user.UserName | titlecase}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <div>
-      <label>Coin Name</label>
-      <input type="text">
-    </div>
-    <div>
-      <label>Purchased Price</label>
-      <input type="text">
-    </div>
-    <div>
-      <label>Total Amount</label>
-      <input type="text">
-    </div>
-    <div>
-      <label>Quantity</label>
-      <input type="text">
-    </div>
-    
-    <button (click)="saveDetails()">Save</button>
+    <form [formGroup]="cryptoForm">
+      <div>
+        <!-- <label>Select User</label> -->
+        <mat-form-field>
+          <mat-label>Users</mat-label>
+          <mat-select formControlName="userName" [(ngModel)]="selected">
+            <mat-option *ngFor="let user of userList" [value]="user">{{user.UserName | titlecase}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
+        <!-- <label>Coin Name</label> -->
+        <input matInput formControlName="coinName" type="text" placeholder="Coin Name">
+      </div>
+      <div>
+        <!-- <label>Purchased Price</label> -->
+        <input matInput type="text" formControlName="purchasePrice" placeholder="Purchased Price">
+      </div>
+      <div>
+        <!-- <label>Quantity</label> -->
+        <input matInput type="text" formControlName="quantity" placeholder="Quantity">
+      </div>
+      <div>
+        <!-- <label>Total Amount</label> -->
+        <input matInput type="text" formControlName="totalAmount" placeholder="Total Rupees">
+      </div>
+      
+
+      <div>
+        <!-- <label>Quantity</label> -->
+        <input matInput type="text" formControlName="purchaseDate" placeholder="purchaseDate">
+      </div>
+
+      <button (click)="saveDetails()">Save</button>
+
+    </form>
+
   </main>
 </section>

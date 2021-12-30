@@ -25,6 +25,11 @@ export class DashboardService {
     return this.http.get(url);
   }
 
+  saveCryptoInfo(data: any) {
+    let url = `${ this.baseUrl }/savePurchaseInfo`;
+    return this.http.post(url, data);
+  }
+
   sendMail() {
     let url = `${ this.baseUrl }/getMarketInfows`;
     return this.http.get(url);

@@ -26,6 +26,21 @@ type User struct {
 	Email    string
 }
 
+type JsonResponse struct {
+	Type    string `json:"type"`
+	Data    []User `json:"data"`
+	Message string `json:"message"`
+}
+
+type CryptoInfo struct {
+	UserName      string `json:"userName"`
+	CoinName      string `json:"coinName"`
+	Quantity      string `json:"quantity"`
+	PurchasePrice string `json:"purchasePrice"`
+	PurchaseDate  string `json:"purchaseDate"`
+	TotalAmount   string `json:"totalAmount"`
+}
+
 func main() {
 	// DB related connection
 	connection := fmt.Sprintf("host=%s port=%d user=%s "+
@@ -148,6 +163,60 @@ func main() {
 		w.Write(jsonResp)
 	})
 
+	http.HandleFunc("/savePurchaseInfo", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+		if r.Method != http.MethodPost {
+			fmt.Fprintf(w, "Post method only")
+			return
+		}
+
+		var response = JsonResponse{}
+
+		decoder := json.NewDecoder(r.Body)
+
+		var cryptInfo CryptoInfo
+		err := decoder.Decode(&cryptInfo)
+
+		checkErr(err)
+
+		fmt.Println("==============================")
+		userName := cryptInfo.UserName
+		coinName := cryptInfo.CoinName
+		quantity := cryptInfo.Quantity
+		purchasePrice := cryptInfo.PurchasePrice
+		purchaseDate := cryptInfo.PurchaseDate
+		totalAmount := cryptInfo.TotalAmount
+		fmt.Println("==============================")
+
+		if userName == "" || coinName == "" || quantity == "" || purchasePrice == "" || purchaseDate == "" || totalAmount == "" {
+			response = JsonResponse{Type: "error", Message: "You are missing important parameter."}
+		} else {
+			fmt.Println("user: " + userName + " purchased : " + quantity + coinName + " for " + purchasePrice + " on " + purchaseDate)
+
+			var lastInsertID int
+			err := db.QueryRow("INSERT INTO purchases(user_name, coin_name, quantity, purchase_price, date, total_amount) VALUES($1, $2, $3, $4, $5, $6) returning id;", userName, coinName, quantity, purchasePrice, purchaseDate, totalAmount).Scan(&lastInsertID)
+			checkErr(err)
+
+			if err != nil {
+				panic(err)
+			}
+			response = JsonResponse{Type: "success", Message: "Crypto info inserted!"}
+		}
+
+		w.Header().Set("Content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		// fmt.Fprintf(w, string("Success"))
+		json.NewEncoder(w).Encode(response)
+	})
+
 	log.Fatal(http.ListenAndServe(":8081", nil))
 
+}
+
+func checkErr(err error) {
+	if err != nil {
+		panic(err)
+	}
 }

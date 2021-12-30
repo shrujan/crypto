@@ -21,4 +21,15 @@ insert into "Users" (user_name, email) values ('shrujan', 'shrork@gmail.com');
 insert into "Users" (user_name, email) values ('eesha', 'eesha@gmail.com');
 select * from "Users";
 
+CREATE TABLE IF NOT EXISTS Purchases
+(
+    id serial primary key,
+    user_name text COLLATE pg_catalog."default",
+    coin_name text COLLATE pg_catalog."default",
+    quantity text COLLATE pg_catalog."default",
+    purchase_price text COLLATE pg_catalog."default",
+    date text COLLATE pg_catalog."default",
+    total_amount text COLLATE pg_catalog."default"
+)
+
 
