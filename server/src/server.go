@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"net/smtp"
 
+	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
 )
 
@@ -41,7 +42,111 @@ type CryptoInfo struct {
 	TotalAmount   string `json:"totalAmount"`
 }
 
+type Coin struct {
+	Ath                              float64
+	Ath_change_percentage            float64
+	Ath_date                         string
+	Atl                              float64
+	Atl_change_percentage            float64
+	Atl_date                         string
+	Circulating_supply               float64
+	Current_price                    float64
+	Fully_diluted_valuation          float64
+	High_24h                         float64
+	Id                               string
+	Image                            string
+	Last_updated                     string
+	Low_24h                          float64
+	Market_cap                       float64
+	Market_cap_change_24h            float64
+	Market_cap_change_percentage_24h float64
+	Market_cap_rank                  float64
+	Max_supply                       float64
+	Name                             string
+	Price_change_24h                 float64
+	Price_change_percentage_24h      float64
+	Symbol                           string
+	Total_supply                     float64
+	Total_volume                     float64
+}
+
+// DB is a global variable to hold db connection
+var DB *sql.DB
+
+// router
+var router *mux.Router
+
+func getAllPurchases(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("=============reaches here =================")
+
+	w.Header().Set("Content-type", "application/json")
+
+	name := mux.Vars(r)["name"]
+	var purchases []CryptoInfo
+
+	fmt.Println("============= name  =================" + name)
+
+	query := `select user_name, coin_name, quantity, purchase_price, total_amount from Purchases where user_name = $1`
+
+	rows, err := DB.Query(query, name)
+	checkErr(err)
+
+	for rows.Next() {
+		var userName, coinName, quantity, purchasePrice, totalAmount string
+
+		err := rows.Scan(&userName, &coinName, &quantity, &purchasePrice, &totalAmount)
+
+		fmt.Println(userName)
+		checkErr(err)
+
+		purchase := CryptoInfo{
+			UserName:      userName,
+			CoinName:      coinName,
+			Quantity:      quantity,
+			PurchasePrice: purchasePrice,
+			TotalAmount:   totalAmount,
+		}
+
+		purchases = append(purchases, purchase)
+	}
+
+	defer rows.Close()
+
+	json.NewEncoder(w).Encode(purchases)
+
+}
+
+func saveCoinList(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-type", "application/json")
+	fmt.Println("Yo .. we reached the save coin section")
+
+	decoder := json.NewDecoder(r.Body)
+	var coinData []Coin
+
+	err := decoder.Decode(&coinData)
+	checkErr(err)
+
+	fmt.Println("-=============")
+	fmt.Println(coinData[0].Name)
+	for key, coin := range coinData {
+		fmt.Println(key, " -- "+coin.Name)
+		// insert query
+		query := "insert into coins (id, name, symbol, total_supply, isFav) values ($1, $2, $3, $4, $5)"
+
+		DB.Exec(query, coin.Id, coin.Name, coin.Symbol, coin.Max_supply, false)
+
+	}
+}
+
+func handleRequests() {
+	router.HandleFunc("/getPurchaseInfo/{name}", getAllPurchases).Methods("GET")
+	router.HandleFunc("/saveCoin", saveCoinList).Methods("POST")
+}
+
 func main() {
+
+	router = mux.NewRouter()
+
 	// DB related connection
 	connection := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
@@ -51,6 +156,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	DB = db
 	defer db.Close()
 
 	err = db.Ping()
@@ -59,11 +165,11 @@ func main() {
 	}
 	// DB connection here closes
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
 	})
 
-	http.HandleFunc("/getMarketInfo", func(w http.ResponseWriter, r *http.Request) {
+	router.HandleFunc("/getMarketInfo", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
@@ -82,7 +188,7 @@ func main() {
 		fmt.Fprintf(w, string(body))
 	})
 
-	http.HandleFunc("/getMarketInfows", func(w http.ResponseWriter, r *http.Request) {
+	router.HandleFunc("/getMarketInfows", func(w http.ResponseWriter, r *http.Request) {
 
 		// var conn, _ = upgrader.Upgrade(w, r, nil)
 		// go func(conn *websocket.Conn) {
@@ -95,7 +201,7 @@ func main() {
 
 	})
 
-	http.HandleFunc("/sendmail", func(w http.ResponseWriter, r *http.Request) {
+	router.HandleFunc("/sendmail", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			fmt.Fprintf(w, "Post method only")
 			return
@@ -128,7 +234,7 @@ func main() {
 		fmt.Fprintf(w, "Success")
 	})
 
-	http.HandleFunc("/getUsers", func(w http.ResponseWriter, r *http.Request) {
+	router.HandleFunc("/getUsers", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
@@ -163,7 +269,7 @@ func main() {
 		w.Write(jsonResp)
 	})
 
-	http.HandleFunc("/savePurchaseInfo", func(w http.ResponseWriter, r *http.Request) {
+	router.HandleFunc("/savePurchaseInfo", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
@@ -211,7 +317,9 @@ func main() {
 		json.NewEncoder(w).Encode(response)
 	})
 
-	log.Fatal(http.ListenAndServe(":8081", nil))
+	handleRequests()
+
+	log.Fatal(http.ListenAndServe(":8081", router))
 
 }
 

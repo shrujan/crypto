@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs';
 
 export interface User {
   UserName: string,
@@ -11,13 +12,17 @@ export interface User {
 })
 export class DashboardService {
   // baseUrl = 'https://api.coingecko.com/api/v3';
-  baseUrl = 'http://localhost:8081';
+  baseUrl        = 'http://localhost:8081';
+  coinListInr$ = new BehaviorSubject<any>(undefined);
+
 
   constructor(private http: HttpClient) { }
 
-  getCoinsInfoInr() {
+  getCoinsInfoInr(): void {
     let url = `${ this.baseUrl }/getMarketInfo`;
-    return this.http.get(url);
+    this.http.get(url).subscribe(coinList => {
+      this.coinListInr$.next(coinList)
+    });
   }
 
   getUsers() {
