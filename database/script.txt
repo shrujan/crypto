@@ -32,4 +32,15 @@ CREATE TABLE IF NOT EXISTS Purchases
     total_amount text COLLATE pg_catalog."default"
 )
 
+===============================
+====== Coin Table ------------
+
+CREATE TABLE IF NOT EXISTS Coins
+(
+    id text primary key,
+    name text,
+    symbol text,
+    total_supply numeric,
+   	isFav boolean
+)
 

@@ -14,6 +14,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HeaderComponent } from './header/header.component';
 import { InputFormComponent } from './input-form/input-form.component';
 import { MaterialModule } from './shared/material.module';
+import { PortfolioComponent } from './portfolio/portfolio.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { MaterialModule } from './shared/material.module';
     DashboardComponent,
     IndianPipe,
     HeaderComponent,
-    InputFormComponent
+    InputFormComponent,
+    PortfolioComponent
   ],
   imports: [
     AppRoutingModule,

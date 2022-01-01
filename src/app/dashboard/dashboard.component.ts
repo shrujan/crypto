@@ -23,19 +23,25 @@ export class DashboardComponent implements OnInit {
   constructor(private dashboardService: DashboardService) { }
 
   ngOnInit(): void {
-    this.getCoinData()
+    this.dashboardService.getCoinsInfoInr();
+    this.dashboardService.coinListInr$.subscribe(coinList => {
+      if (!coinList) return
+      this.setCustomPrices(coinList);
+      this.coins = coinList;
+      this.filteredCoins = coinList;
+    })
     // const source = interval(1000000);
     // source.subscribe(() => this.getCoinData())
     
   }
 
-  getCoinData(): void {
-    this.dashboardService.getCoinsInfoInr().subscribe((data) => {
-      this.setCustomPrices(data);
-      this.coins = data;
-      this.filteredCoins = data;
-    });
-  }
+  // getCoinData(): void {
+  //   this.dashboardService.getCoinsInfoInr().subscribe((data) => {
+  //     this.setCustomPrices(data);
+  //     this.coins = data;
+  //     this.filteredCoins = data;
+  //   });
+  // }
 
   savePurchasedPrice(coin: any): void {
     const updatePrice = (favCoin: FavoriteCoin) => favCoin.purchasedPrice = coin.purchasedPrice;
