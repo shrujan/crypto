@@ -8,24 +8,24 @@ import { DashboardService } from '../services/dashboard/dashboard.service';
 })
 export class PortfolioComponent implements OnInit {
 
-  coinList: any;
-  displayedColumns: string[] = ['Coin', 'Current International Price', 'Current Indian Price', 'Purchased Date', 'Purchased Quantity', 'Purchase Price', 'Total Amount', 'Change %'];
+  internationalList: any;
+  displayedColumns: string[] = ['Coin', 'Current International Price', 'Current Indian Price', 'Purchased Quantity', 'Purchase Price', 'Total Amount', 'Change %'];
   purchases: any;
   filteredPortfolio: any;
+  wazirList: any;
 
   constructor(
     private dashboardService: DashboardService
   ) {
-    
-    
+    this.dashboardService.getCoinsInfoInr();
+    this.dashboardService.fetchAPIWazirx();
+    this.dashboardService.getPurchaseInfo("shrujan");
   }
 
   ngOnInit(): void {
-    this.dashboardService.fetchAPIWazirx();
-    this.dashboardService.getPurchaseInfo("shrujan");
     this.dashboardService.wazirxData$.subscribe(list => {
       if (list) {
-        this.coinList = list;
+        this.wazirList = list;
         this.processPurchasedInfo();
       }
     })
@@ -35,17 +35,17 @@ export class PortfolioComponent implements OnInit {
         this.processPurchasedInfo();
       }
     })
-    // this.dashboardService.coinListInr$.subscribe(coinList => {
-    //   if (!coinList) return
-    //   this.setCustomPrices(coinList);
-    //   this.coins = coinList;
-    //   this.filteredCoins = coinList;
-    // })
+    this.dashboardService.coinListInr$.subscribe(list => {
+      if (list) {
+        this.internationalList = list;
+        this.processPurchasedInfo();
+      }
+    })
   }
 
   processPurchasedInfo() {
-    if (this.coinList && this.purchases) {
-      this.filteredPortfolio = this.dashboardService.processPurchasedInfo(this.purchases, this.coinList);
+    if (this.wazirList && this.purchases && this.internationalList) {
+      this.filteredPortfolio = this.dashboardService.processPurchasedInfo(this.purchases, this.wazirList, this.internationalList);
     }
   }
 

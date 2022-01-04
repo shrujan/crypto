@@ -10,22 +10,17 @@
 
     <ng-container matColumnDef="Current International Price">
       <th mat-header-cell *matHeaderCellDef>Current International Price </th>
-      <td mat-cell *matCellDef="let element"> {{ element.buy | indian }} </td>
+      <td mat-cell *matCellDef="let element"> {{ element.international | indian }} </td>
     </ng-container>
 
     <ng-container matColumnDef="Current Indian Price">
       <th mat-header-cell *matHeaderCellDef>Current Indian Price </th>
-      <td mat-cell *matCellDef="let element"> {{ element.buy | indian }} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="Purchased Date">
-      <th mat-header-cell *matHeaderCellDef>Purchased Date </th>
-      <td mat-cell *matCellDef="let element"> {{ element.high_24h | indian }} </td>
+      <td mat-cell *matCellDef="let element"> {{ element.indian | indian }} </td>
     </ng-container>
 
     <ng-container matColumnDef="Purchased Quantity">
       <th mat-header-cell *matHeaderCellDef>Purchased Quantity</th>
-      <td mat-cell *matCellDef="let element"> {{ element.quantity | indian }} </td>
+      <td mat-cell *matCellDef="let element"> {{ element.quantity }} </td>
     </ng-container>
 
     <ng-container matColumnDef="Purchase Price">
