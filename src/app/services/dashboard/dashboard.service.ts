@@ -58,7 +58,7 @@ export class DashboardService {
     })
   }
 
-  processPurchasedInfo(purchases: any, coinData: any) {
+  processPurchasedInfo(purchases: any, wazirData: any, internationalData: any) {
     const uniqueCoins  = [ ... new Set(purchases.map((purchasedCoin: any) => purchasedCoin.coinName)) ]
     const computeQuantity      = (prev: any, current: any) => parseInt(prev.quantity) + parseInt(current.quantity);
     const computePurchasePrice = (prev: any, current: any) => parseInt(prev.purchasePrice) + parseInt(current.purchasePrice);
@@ -72,6 +72,9 @@ export class DashboardService {
       coinObj.quantity      = (filteredCoinCount > 1) ? filterCoins(coin).reduce(computeQuantity) : parseInt(filterCoins(coin)[0].quantity);
       coinObj.purchasePrice = (filteredCoinCount > 1) ? filterCoins(coin).reduce(computePurchasePrice) : parseInt(filterCoins(coin)[0].purchasePrice);
       coinObj.totalAmount   = (filteredCoinCount > 1) ? filterCoins(coin).reduce(computeTotalAmount) : parseInt(filterCoins(coin)[0].totalAmount);
+      // coinObj.indian        = wazirData.find(coin => coin.quote_unit === 'inr' && coin.base_unit === coin).buy;
+      coinObj.indian        = wazirData[coin + 'inr'].buy
+      coinObj.international = internationalData.find(data => data.symbol === coin).current_price;
       purchasesArr.push(coinObj)
     });
     return purchasesArr;
