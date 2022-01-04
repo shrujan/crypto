@@ -70,6 +70,12 @@ type Coin struct {
 	Total_volume                     float64
 }
 
+type UserCoin struct {
+	IsFav  bool
+	Name   string
+	Symbol string
+}
+
 // DB is a global variable to hold db connection
 var DB *sql.DB
 
@@ -80,6 +86,9 @@ func getAllPurchases(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("=============reaches here =================")
 
 	w.Header().Set("Content-type", "application/json")
+	// avoid cors error
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
 	name := mux.Vars(r)["name"]
 	var purchases []CryptoInfo
@@ -138,9 +147,67 @@ func saveCoinList(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func getCoinList(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+	sql := `select name, symbol, isfav from Coins`
+	coinList, err := DB.Query(sql)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if coinList == nil {
+		fmt.Fprintf(w, string("No Coins found"))
+	}
+
+	var coins []*UserCoin // declare a slice of courses that will hold all of the Course instances scanned from the rows object
+	for coinList.Next() { // this stops when there are no more coin
+		coinObj := new(UserCoin)
+		fmt.Println(coinObj)                                                 // initialize a new instance
+		err := coinList.Scan(&coinObj.Name, &coinObj.Symbol, &coinObj.IsFav) // scan contents of the current row into the instance
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		coins = append(coins, coinObj)
+	}
+
+	jsonResp, err := json.Marshal(coins)
+	if err != nil {
+		log.Fatalf("Error happened in JSON marshal. Err: %s", err)
+	}
+
+	w.Header().Set("Content-type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(jsonResp)
+}
+
+func getWazirxData(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+	url := "https://api.wazirx.com/api/v2/tickers"
+	resp, err := http.Get(url)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Fprintf(w, string(body))
+}
+
 func handleRequests() {
 	router.HandleFunc("/getPurchaseInfo/{name}", getAllPurchases).Methods("GET")
 	router.HandleFunc("/saveCoin", saveCoinList).Methods("POST")
+	router.HandleFunc("/getCoin", getCoinList).Methods("GET")
+	router.HandleFunc("/getMarketInfoWX", getWazirxData).Methods("GET")
+
 }
 
 func main() {
@@ -186,19 +253,6 @@ func main() {
 		}
 
 		fmt.Fprintf(w, string(body))
-	})
-
-	router.HandleFunc("/getMarketInfows", func(w http.ResponseWriter, r *http.Request) {
-
-		// var conn, _ = upgrader.Upgrade(w, r, nil)
-		// go func(conn *websocket.Conn) {
-		// 	for {
-		// 		mType, msg, _ := conn.ReadMessage()
-
-		// 		conn.WriteMessage(mType, msg)
-		// 	}
-		// }(conn)
-
 	})
 
 	router.HandleFunc("/sendmail", func(w http.ResponseWriter, r *http.Request) {

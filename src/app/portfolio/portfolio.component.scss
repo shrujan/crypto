@@ -1,0 +1,10 @@
+section[data-component="portfolio"] {
+  > table {
+    width: 100%;
+    tr {
+      &.mat-header-row > th {
+        background-color: aliceblue;
+      }
+    }
+}
+}
