@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { DashboardService } from '../services/dashboard/dashboard.service';
-import { interval } from 'rxjs';
 import { find, findIndex } from 'lodash'; 
 
 interface FavoriteCoin {
@@ -34,14 +33,6 @@ export class DashboardComponent implements OnInit {
     // source.subscribe(() => this.getCoinData())
     
   }
-
-  // getCoinData(): void {
-  //   this.dashboardService.getCoinsInfoInr().subscribe((data) => {
-  //     this.setCustomPrices(data);
-  //     this.coins = data;
-  //     this.filteredCoins = data;
-  //   });
-  // }
 
   savePurchasedPrice(coin: any): void {
     const updatePrice = (favCoin: FavoriteCoin) => favCoin.purchasedPrice = coin.purchasedPrice;
