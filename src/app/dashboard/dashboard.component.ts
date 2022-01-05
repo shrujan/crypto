@@ -22,8 +22,8 @@ export class DashboardComponent implements OnInit {
   constructor(private dashboardService: DashboardService) { }
 
   ngOnInit(): void {
-    this.dashboardService.getCoinsInfoInr();
-    this.dashboardService.coinListInr$.subscribe(coinList => {
+    this.dashboardService.getInternationalData();
+    this.dashboardService.internationalListInr$.subscribe(coinList => {
       if (!coinList) return
       this.setCustomPrices(coinList);
       this.coins = coinList;

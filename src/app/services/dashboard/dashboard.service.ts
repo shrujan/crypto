@@ -11,25 +11,29 @@ export interface User {
   providedIn: 'root'
 })
 export class DashboardService {
-  // baseUrl = 'https://api.coingecko.com/api/v3';
-  baseUrl        = 'http://localhost:8081';
-  coinListInr$  = new BehaviorSubject<any>(undefined);
-  purchaseInfo$ = new BehaviorSubject<any>(undefined) 
-  wazirxData$   = new BehaviorSubject<any>(undefined);
-
+  baseUrl                = 'http://localhost:8081';
+  coinList$              = new BehaviorSubject<any>(undefined);
+  internationalListInr$  = new BehaviorSubject<any>(undefined);
+  purchaseInfo$          = new BehaviorSubject<any>(undefined);
+  wazirxData$            = new BehaviorSubject<any>(undefined);
 
   constructor(private http: HttpClient) { }
 
-  getCoinsInfoInr(): void {
+  getInternationalData(): void {
     let url = `${ this.baseUrl }/getMarketInfo`;
     this.http.get(url).subscribe(coinList => {
-      this.coinListInr$.next(coinList)
+      this.internationalListInr$.next(coinList)
     });
   }
 
   getUsers() {
     let url = `${ this.baseUrl }/getUsers`;
     return this.http.get(url);
+  }
+
+  getCoins() {
+    let url = `${ this.baseUrl }/getCoin`;
+    return this.http.get(url).subscribe(coins => this.coinList$.next(coins));
   }
 
   saveCryptoInfo(data: any) {
@@ -72,7 +76,6 @@ export class DashboardService {
       coinObj.quantity      = (filteredCoinCount > 1) ? filterCoins(coin).reduce(computeQuantity) : parseInt(filterCoins(coin)[0].quantity);
       coinObj.purchasePrice = (filteredCoinCount > 1) ? filterCoins(coin).reduce(computePurchasePrice) : parseInt(filterCoins(coin)[0].purchasePrice);
       coinObj.totalAmount   = (filteredCoinCount > 1) ? filterCoins(coin).reduce(computeTotalAmount) : parseInt(filterCoins(coin)[0].totalAmount);
-      // coinObj.indian        = wazirData.find(coin => coin.quote_unit === 'inr' && coin.base_unit === coin).buy;
       coinObj.indian        = wazirData[coin + 'inr'].buy
       coinObj.international = internationalData.find(data => data.symbol === coin).current_price;
       purchasesArr.push(coinObj)

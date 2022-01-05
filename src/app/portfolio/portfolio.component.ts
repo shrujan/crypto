@@ -9,7 +9,7 @@ import { DashboardService } from '../services/dashboard/dashboard.service';
 export class PortfolioComponent implements OnInit {
 
   internationalList: any;
-  displayedColumns: string[] = ['Coin', 'Current International Price', 'Current Indian Price', 'Purchased Quantity', 'Purchase Price', 'Total Amount', 'Change %'];
+  displayedColumns: string[] = ['Coin', 'Current International Price', 'Current Indian Price', 'Purchased Quantity', 'Purchase Price', 'Total Amount Spent', 'Average/Coin', 'Change %'];
   purchases: any;
   filteredPortfolio: any;
   wazirList: any;
@@ -17,7 +17,7 @@ export class PortfolioComponent implements OnInit {
   constructor(
     private dashboardService: DashboardService
   ) {
-    this.dashboardService.getCoinsInfoInr();
+    this.dashboardService.getInternationalData();
     this.dashboardService.fetchAPIWazirx();
     this.dashboardService.getPurchaseInfo("shrujan");
   }
@@ -35,7 +35,7 @@ export class PortfolioComponent implements OnInit {
         this.processPurchasedInfo();
       }
     })
-    this.dashboardService.coinListInr$.subscribe(list => {
+    this.dashboardService.internationalListInr$.subscribe(list => {
       if (list) {
         this.internationalList = list;
         this.processPurchasedInfo();
@@ -47,6 +47,12 @@ export class PortfolioComponent implements OnInit {
     if (this.wazirList && this.purchases && this.internationalList) {
       this.filteredPortfolio = this.dashboardService.processPurchasedInfo(this.purchases, this.wazirList, this.internationalList);
     }
+  }
+
+  calculatePercentIncreaseDecrease(coinPurchasePrice , coinCurrentPrice) {
+    coinPurchasePrice = parseInt(coinPurchasePrice);
+    coinCurrentPrice  = parseInt(coinCurrentPrice);
+    return ((coinCurrentPrice - coinPurchasePrice) / coinPurchasePrice) * 100;
   }
 
 }
