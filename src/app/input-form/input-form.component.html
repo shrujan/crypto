@@ -1,42 +1,39 @@
-<section>
+<section data-component="purchase-info">
   <crypto-header></crypto-header>
   <main>
     <form [formGroup]="cryptoForm">
       <div>
-        <!-- <label>Select User</label> -->
         <mat-form-field>
           <mat-label>Users</mat-label>
-          <mat-select formControlName="userName" [(ngModel)]="selected">
+          <mat-select formControlName="userName">
             <mat-option *ngFor="let user of userList" [value]="user">{{user.UserName | titlecase}}</mat-option>
           </mat-select>
         </mat-form-field>
       </div>
       <div>
-        <!-- <label>Coin Name</label> -->
-        <input matInput formControlName="coinName" type="text" placeholder="Coin Name">
+        <mat-form-field>
+          <mat-label>Coins</mat-label>
+          <mat-select formControlName="coinName">
+            <mat-option *ngFor="let coin of coinList" [value]="coin.Symbol">{{coin.Name | titlecase}}</mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
       <div>
-        <!-- <label>Purchased Price</label> -->
         <input matInput type="text" formControlName="purchasePrice" placeholder="Purchased Price">
       </div>
       <div>
-        <!-- <label>Quantity</label> -->
         <input matInput type="text" formControlName="quantity" placeholder="Quantity">
       </div>
       <div>
-        <!-- <label>Total Amount</label> -->
         <input matInput type="text" formControlName="totalAmount" placeholder="Total Rupees">
       </div>
-      
-
       <div>
-        <!-- <label>Quantity</label> -->
         <input matInput type="text" formControlName="purchaseDate" placeholder="purchaseDate">
       </div>
-
-      <button (click)="saveDetails()">Save</button>
-
+      <div>
+        <button (click)="saveDetails()">Save</button>
+      </div>
     </form>
-
   </main>
+  
 </section>

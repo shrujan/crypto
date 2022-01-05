@@ -17,7 +17,7 @@ export class PortfolioComponent implements OnInit {
   constructor(
     private dashboardService: DashboardService
   ) {
-    this.dashboardService.getCoinsInfoInr();
+    this.dashboardService.getInternationalData();
     this.dashboardService.fetchAPIWazirx();
     this.dashboardService.getPurchaseInfo("shrujan");
   }
@@ -35,7 +35,7 @@ export class PortfolioComponent implements OnInit {
         this.processPurchasedInfo();
       }
     })
-    this.dashboardService.coinListInr$.subscribe(list => {
+    this.dashboardService.internationalListInr$.subscribe(list => {
       if (list) {
         this.internationalList = list;
         this.processPurchasedInfo();
