@@ -24,6 +24,16 @@ section[data-component="purchase-info"] {
           padding: 0px 5px;
           border-bottom: 1px solid #cccccc;
         }
+        > button {
+          background-color: #2adb2a;
+          height: 30px;
+          width: 100px;
+          border-radius: 20px;
+          color: #f6f6f6;
+          font-size: 15px;
+          font-weight: 400;
+          cursor: pointer;
+        }
       }
     }
   }
