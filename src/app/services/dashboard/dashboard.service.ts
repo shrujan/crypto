@@ -7,6 +7,12 @@ export interface User {
   Email: string
 } 
 
+export interface Coin {
+  IsFav?: boolean,
+  Name?:  string,
+  Symbol?: string
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -16,6 +22,7 @@ export class DashboardService {
   internationalListInr$  = new BehaviorSubject<any>(undefined);
   purchaseInfo$          = new BehaviorSubject<any>(undefined);
   wazirxData$            = new BehaviorSubject<any>(undefined);
+  favoriteCoins$         = new BehaviorSubject<any>(undefined);
 
   constructor(private http: HttpClient) { }
 
@@ -33,7 +40,10 @@ export class DashboardService {
 
   getCoins() {
     let url = `${ this.baseUrl }/getCoin`;
-    return this.http.get(url).subscribe(coins => this.coinList$.next(coins));
+    return this.http.get(url).subscribe((coins: any) => {
+      this.favoriteCoins$.next(coins.filter(coin => coin.IsFav));
+      this.coinList$.next(coins);
+    });
   }
 
   saveCryptoInfo(data: any) {
@@ -44,6 +54,14 @@ export class DashboardService {
   sendMail() {
     let url = `${ this.baseUrl }/getMarketInfows`;
     return this.http.get(url);
+  }
+
+  updateFavorites(coinData) {
+    console.log(coinData)
+    let url = `${ this.baseUrl }/favoriteCoin`;
+    this.http.post(url, coinData).subscribe(() => {
+      console.log("saved")
+    });
   }
 
   fetchAPIWazirx() {

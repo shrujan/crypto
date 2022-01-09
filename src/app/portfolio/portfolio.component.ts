@@ -17,8 +17,6 @@ export class PortfolioComponent implements OnInit {
   constructor(
     private dashboardService: DashboardService
   ) {
-    this.dashboardService.getInternationalData();
-    this.dashboardService.fetchAPIWazirx();
     this.dashboardService.getPurchaseInfo("shrujan");
   }
 

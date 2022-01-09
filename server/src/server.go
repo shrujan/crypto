@@ -42,6 +42,11 @@ type CryptoInfo struct {
 	TotalAmount   string `json:"totalAmount"`
 }
 
+type FavCoin struct {
+	IsFav  bool   `json:"isFav"`
+	Symbol string `json:"symbol"`
+}
+
 type Coin struct {
 	Ath                              float64
 	Ath_change_percentage            float64
@@ -202,11 +207,49 @@ func getWazirxData(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(body))
 }
 
+func updateFavoriteCoin(w http.ResponseWriter, r *http.Request) {
+
+	// w.Header().Set("Content-type", "application/json")
+	// w.WriteHeader(http.StatusOK)
+	// fmt.Fprintf(w, "Success")
+	// json.NewEncoder(w).Encode(response)
+
+	// w.Header().Set("Access-Control-Allow-Origin", "*")
+	// w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	// fmt.Println("favorite coins ")
+	// var response = JsonResponse{}
+
+	// decoder := json.NewDecoder(r.Body)
+
+	// var coin UserCoin
+	// err := decoder.Decode(&coin)
+	// fmt.Println("symbol ", coin.Symbol)
+	// fmt.Println("fav ", coin.IsFav)
+
+	// checkErr(err)
+
+	// if coin.Symbol == "" {
+	// 	response = JsonResponse{Type: "Fail", Message: "Please pass all details"}
+	// 	w.WriteHeader(http.StatusPreconditionFailed)
+	// } else {
+
+	// 	query := "update coins set isFav=$1 where symbol=$2"
+	// 	_, err := DB.Exec(query, coin.IsFav, coin.Symbol)
+	// 	checkErr(err)
+
+	// 	response = JsonResponse{Type: "success", Message: "Updated Favorite"}
+	// }
+
+	// w.Header().Set("Content-type", "application/json")
+	// json.NewEncoder(w).Encode(response)
+}
+
 func handleRequests() {
 	router.HandleFunc("/getPurchaseInfo/{name}", getAllPurchases).Methods("GET")
 	router.HandleFunc("/saveCoin", saveCoinList).Methods("POST")
 	router.HandleFunc("/getCoin", getCoinList).Methods("GET")
 	router.HandleFunc("/getMarketInfoWX", getWazirxData).Methods("GET")
+	// router.HandleFunc("/favoriteCoin", updateFavoriteCoin).Methods("POST")
 
 }
 
@@ -231,6 +274,10 @@ func main() {
 		panic(err)
 	}
 	// DB connection here closes
+
+	// CORS Handle
+	// corsObj := handlers.AllowedOrigins([]string{"*"})
+	//
 
 	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
@@ -371,14 +418,48 @@ func main() {
 		json.NewEncoder(w).Encode(response)
 	})
 
+	router.HandleFunc("/favoriteCoin", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+		var response = JsonResponse{}
+
+		decoder := json.NewDecoder(r.Body)
+
+		var coin FavCoin
+		err := decoder.Decode(&coin)
+		fmt.Println("symbol ", coin.Symbol)
+		fmt.Println("fav ", coin.IsFav)
+		fmt.Println(err)
+
+		if coin.Symbol == "" {
+			fmt.Println("symbol missing")
+			response = JsonResponse{Type: "Fail", Message: "Please pass all details"}
+			w.WriteHeader(http.StatusBadRequest)
+		} else {
+
+			query := "update coins set isFav=$1 where symbol=$2"
+			_, err := DB.Exec(query, coin.IsFav, coin.Symbol)
+			checkErr(err)
+
+			response = JsonResponse{Type: "success", Message: "Updated Favorite"}
+			w.WriteHeader(http.StatusOK)
+			fmt.Fprintf(w, "Success")
+		}
+
+		w.Header().Set("Content-type", "application/json")
+		json.NewEncoder(w).Encode(response)
+	})
+
 	handleRequests()
 
 	log.Fatal(http.ListenAndServe(":8081", router))
+	// log.Fatal(http.ListenAndServe(":3000", handlers.CORS(corsObj)(router)))
 
 }
 
 func checkErr(err error) {
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
 }

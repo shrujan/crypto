@@ -22,7 +22,6 @@ export class DashboardComponent implements OnInit {
   constructor(private dashboardService: DashboardService) { }
 
   ngOnInit(): void {
-    this.dashboardService.getInternationalData();
     this.dashboardService.internationalListInr$.subscribe(coinList => {
       if (!coinList) return
       this.setCustomPrices(coinList);
@@ -56,7 +55,10 @@ export class DashboardComponent implements OnInit {
   }
 
   setFavorite(coin: any) {
-    const deleteFavCoin = (index: number) => this.favorites.splice(index, 1);
+    const deleteFavCoin = (index: number) => {
+      this.favorites.splice(index, 1);
+      this.updateFavStatusOfCoins(coin, false);
+    }
     const favCoinIndex = findIndex(this.favorites, (fav: FavoriteCoin) => fav.id === coin.id);
     (favCoinIndex === -1) ? this.saveNewFavCoin(coin) : deleteFavCoin(favCoinIndex);
     this.setCustomPrices(this.filteredCoins)
@@ -72,5 +74,15 @@ export class DashboardComponent implements OnInit {
       favorite: true,
       purchasedPrice: coin.purchasedPrice,
     });
+    this.updateFavStatusOfCoins(coin, true);
+  }
+
+  updateFavStatusOfCoins(coin: any, isFav: boolean): void {
+    const params = {
+      isFav:  isFav,
+      symbol: coin.symbol
+    }
+    console.log('updatein')
+    this.dashboardService.updateFavorites(params);
   }
 }

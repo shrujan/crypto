@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { DashboardService } from './services/dashboard/dashboard.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,12 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'crypto';
+  
+  constructor(
+    private dashboardService: DashboardService
+  ) {
+    this.dashboardService.getInternationalData();
+    this.dashboardService.fetchAPIWazirx();
+    this.dashboardService.getCoins();
+  }
 }
