@@ -414,7 +414,6 @@ func main() {
 
 		w.Header().Set("Content-type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		// fmt.Fprintf(w, string("Success"))
 		json.NewEncoder(w).Encode(response)
 	})
 
@@ -423,7 +422,6 @@ func main() {
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
 		var response = JsonResponse{}
-
 		decoder := json.NewDecoder(r.Body)
 
 		var coin FavCoin
@@ -432,12 +430,6 @@ func main() {
 		fmt.Println("fav ", coin.IsFav)
 		fmt.Println(err)
 
-		// if coin.Symbol == "" {
-		// 	fmt.Println("symbol missing")
-		// 	response = JsonResponse{Type: "Fail", Message: "Please pass all details"}
-		// 	w.WriteHeader(http.StatusBadRequest)
-		// } else {
-
 		query := "update coins set isFav=$1 where symbol=$2"
 		_, dbErr := DB.Exec(query, coin.IsFav, coin.Symbol)
 		checkErr(dbErr)
@@ -445,7 +437,6 @@ func main() {
 		response = JsonResponse{Type: "success", Message: "Updated Favorite"}
 		w.WriteHeader(http.StatusOK)
 		fmt.Fprintf(w, "Success")
-		// }
 
 		w.Header().Set("Content-type", "application/json")
 		json.NewEncoder(w).Encode(response)
