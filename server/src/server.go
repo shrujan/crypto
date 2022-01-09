@@ -432,20 +432,20 @@ func main() {
 		fmt.Println("fav ", coin.IsFav)
 		fmt.Println(err)
 
-		if coin.Symbol == "" {
-			fmt.Println("symbol missing")
-			response = JsonResponse{Type: "Fail", Message: "Please pass all details"}
-			w.WriteHeader(http.StatusBadRequest)
-		} else {
+		// if coin.Symbol == "" {
+		// 	fmt.Println("symbol missing")
+		// 	response = JsonResponse{Type: "Fail", Message: "Please pass all details"}
+		// 	w.WriteHeader(http.StatusBadRequest)
+		// } else {
 
-			query := "update coins set isFav=$1 where symbol=$2"
-			_, err := DB.Exec(query, coin.IsFav, coin.Symbol)
-			checkErr(err)
+		query := "update coins set isFav=$1 where symbol=$2"
+		_, dbErr := DB.Exec(query, coin.IsFav, coin.Symbol)
+		checkErr(dbErr)
 
-			response = JsonResponse{Type: "success", Message: "Updated Favorite"}
-			w.WriteHeader(http.StatusOK)
-			fmt.Fprintf(w, "Success")
-		}
+		response = JsonResponse{Type: "success", Message: "Updated Favorite"}
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintf(w, "Success")
+		// }
 
 		w.Header().Set("Content-type", "application/json")
 		json.NewEncoder(w).Encode(response)
