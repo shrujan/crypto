@@ -39,6 +39,13 @@ export class FavoritesComponent implements OnInit {
         console.log(this.favCoins)
       }
     })
+
+    if (!this.wazirList) {
+      this.dashboardService.fetchAPIWazirx();
+    }
+    if (!this.internationalList) {
+      this.dashboardService.getInternationalData();
+    }
   }
 
   getInternationalCoinPrice(coin) {
@@ -46,7 +53,7 @@ export class FavoritesComponent implements OnInit {
   }
 
   getWXCoinPrice(coin) {
-    return (coin && this.wazirList) ? this.wazirList[coin.Symbol+"inr"].buy : '';
+    return (coin && this.wazirList && this.wazirList[coin.Symbol+"inr"]) ? this.wazirList[coin.Symbol+"inr"].buy : '';
   }
 
 }

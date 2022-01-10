@@ -14,6 +14,7 @@ interface FavoriteCoin {
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
+  coinList: any;
   coins: any;
   displayedColumns: string[] = ['Favorites', 'Coin', 'Price', '24 High', '24 Low', 'Change %', 'Purchased'];
   favorites: FavoriteCoin[] = [];
@@ -25,9 +26,14 @@ export class DashboardComponent implements OnInit {
     this.dashboardService.internationalListInr$.subscribe(coinList => {
       if (!coinList) return
       this.setCustomPrices(coinList);
+      coinList.forEach(coin => {
+        coin.favorite = this.isFav(coin.symbol)
+      });
       this.coins = coinList;
       this.filteredCoins = coinList;
     })
+
+    this.dashboardService.coinList$.subscribe(coins => this.coinList = coins)
     // const source = interval(1000000);
     // source.subscribe(() => this.getCoinData())
     
@@ -55,12 +61,11 @@ export class DashboardComponent implements OnInit {
   }
 
   setFavorite(coin: any) {
-    const deleteFavCoin = (index: number) => {
-      this.favorites.splice(index, 1);
+    const deleteFavCoin = () => {
       this.updateFavStatusOfCoins(coin, false);
     }
-    const favCoinIndex = findIndex(this.favorites, (fav: FavoriteCoin) => fav.id === coin.id);
-    (favCoinIndex === -1) ? this.saveNewFavCoin(coin) : deleteFavCoin(favCoinIndex);
+    // const favCoinIndex = findIndex(this.favorites, (fav: FavoriteCoin) => fav.id === coin.id);
+    (!this.isFav(coin.symbol)) ? this.saveNewFavCoin(coin) : deleteFavCoin();
     this.setCustomPrices(this.filteredCoins)
   }
 
@@ -69,11 +74,11 @@ export class DashboardComponent implements OnInit {
   }
 
   saveNewFavCoin(coin: any): void {
-    this.favorites.push({
-      id: coin.id,
-      favorite: true,
-      purchasedPrice: coin.purchasedPrice,
-    });
+    // this.favorites.push({
+    //   id: coin.id,
+    //   favorite: true,
+    //   purchasedPrice: coin.purchasedPrice,
+    // });
     this.updateFavStatusOfCoins(coin, true);
   }
 
@@ -82,7 +87,15 @@ export class DashboardComponent implements OnInit {
       isFav:  isFav,
       symbol: coin.symbol
     }
-    console.log('updatein')
     this.dashboardService.updateFavorites(params);
+  }
+
+  isFav(coinSymbol: string): boolean {
+    if (!coinSymbol || !this.coinList) return false;
+    if (this.coinList.find(coin => coin.Symbol === coinSymbol) === undefined) {
+      console.log(coinSymbol)
+      return false;
+    }
+    return this.coinList.find(coin => coin.Symbol === coinSymbol).IsFav;
   }
 }

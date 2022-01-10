@@ -11,7 +11,7 @@
 
     <ng-container matColumnDef="Favorites">
       <th mat-header-cell *matHeaderCellDef> Favorites </th>
-      <td [class.favorite]="element.favorite"  (click)="setFavorite(element)" mat-cell *matCellDef="let element">
+      <td [class.favorite]="isFav(element.symbol)"  (click)="setFavorite(element)" mat-cell *matCellDef="let element">
         <mat-icon>favorite_border</mat-icon>
         <mat-icon>favorite</mat-icon>
       </td>

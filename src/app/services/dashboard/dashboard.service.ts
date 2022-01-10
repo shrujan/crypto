@@ -59,9 +59,9 @@ export class DashboardService {
   updateFavorites(coinData) {
     console.log(coinData)
     let url = `${ this.baseUrl }/favoriteCoin`;
-    this.http.post(url, coinData).subscribe(() => {
-      console.log("saved")
-    });
+    this.http.post(url, coinData).subscribe((resp) => {
+      this.getCoins();
+    }, err => this.getCoins());
   }
 
   fetchAPIWazirx() {
