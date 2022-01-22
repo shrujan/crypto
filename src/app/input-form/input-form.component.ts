@@ -29,24 +29,29 @@ export class InputFormComponent implements OnInit {
 
   initializeForm() {
     this.cryptoForm = new FormGroup({
-      buySell: new FormControl(),
-      coinName: new FormControl(''),
-      transactionDate: new FormControl(),
+      buySell:          new FormControl(),
+      coinName:         new FormControl(''),
+      transactionDate:  new FormControl(),
       transactionPrice: new FormControl(),
-      quantity: new FormControl(),
-      totalAmount: new FormControl(),
-      userName: new FormControl(''),
-
+      quantity:         new FormControl(),
+      totalAmount:      new FormControl(),
+      userName:         new FormControl(''),
     })
+  }
+
+  computePricePerCoin(): void {
+    const cryptoData = this.cryptoForm.value;
+    this.cryptoForm.patchValue({
+      transactionPrice: parseInt(cryptoData.totalAmount) / parseInt(cryptoData.quantity),
+    });
   }
 
   saveDetails(): void {
     const cryptoData = this.cryptoForm.value;
-    console.log(cryptoData)
     const param = {
       "buySell":          cryptoData.buySell,
       "coinName":         (cryptoData.coinName).toLowerCase(),
-      "transactionDate":     cryptoData.transactionDate || 'N/A',
+      "transactionDate":  cryptoData.transactionDate || 'N/A',
       "quantity":         cryptoData.quantity,
       "totalAmount":      cryptoData.totalAmount || (parseInt(cryptoData.quantity) * parseInt(cryptoData.transactionPrice)),
       "transactionPrice": cryptoData.transactionPrice,

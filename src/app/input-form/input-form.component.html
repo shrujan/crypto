@@ -19,13 +19,13 @@
         </mat-form-field>
       </div>
       <div>
-        <input matInput type="text" formControlName="transactionPrice" placeholder="Transaction Price">
+        <input matInput type="text" formControlName="transactionPrice" placeholder="Price/Coin">
       </div>
       <div>
-        <input matInput type="text" formControlName="quantity" placeholder="Quantity">
+        <input matInput type="text" formControlName="quantity" placeholder="Number of Coins">
       </div>
       <div>
-        <input matInput type="text" formControlName="totalAmount" placeholder="Total Rupees">
+        <input matInput type="text" formControlName="totalAmount" placeholder="Total Rupees" (ngModelChange)="computePricePerCoin()">
       </div>
       <div>
         <input matInput type="text" formControlName="transactionDate" placeholder="Transaction Date">
