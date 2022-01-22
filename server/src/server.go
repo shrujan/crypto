@@ -35,7 +35,7 @@ type JsonResponse struct {
 
 type CryptoInfo struct {
 	CoinName         string `json:"coinName"`
-	PurchaseDate     string `json:"purchaseDate"`
+	TransactionDate  string `json:"transactionDate"`
 	TransactionPrice string `json:"transactionPrice"`
 	Quantity         string `json:"quantity"`
 	TotalAmount      string `json:"totalAmount"`
@@ -394,18 +394,18 @@ func main() {
 		coinName := cryptInfo.CoinName
 		quantity := cryptInfo.Quantity
 		transactionPrice := cryptInfo.TransactionPrice
-		purchaseDate := cryptInfo.PurchaseDate
+		transactionDate := cryptInfo.TransactionDate
 		totalAmount := cryptInfo.TotalAmount
 		buySell := cryptInfo.BuySell
 		fmt.Println("==============================")
 
-		if userName == "" || coinName == "" || quantity == "" || transactionPrice == "" || purchaseDate == "" || totalAmount == "" || buySell == "" {
+		if userName == "" || coinName == "" || quantity == "" || transactionPrice == "" || transactionDate == "" || totalAmount == "" || buySell == "" {
 			response = JsonResponse{Type: "error", Message: "You are missing important parameter."}
 		} else {
-			fmt.Println("user: " + userName + " purchased : " + quantity + coinName + " for " + transactionPrice + " on " + purchaseDate)
+			fmt.Println("user: " + userName + " purchased : " + quantity + coinName + " for " + transactionPrice + " on " + transactionDate)
 
 			var lastInsertID int
-			err := db.QueryRow("INSERT INTO purchases(user_name, coin_name, quantity, purchase_price, date, total_amount, buy_sell) VALUES($1, $2, $3, $4, $5, $6, $7) returning id;", userName, coinName, quantity, transactionPrice, purchaseDate, totalAmount, buySell).Scan(&lastInsertID)
+			err := db.QueryRow("INSERT INTO purchases(user_name, coin_name, quantity, purchase_price, date, total_amount, buy_sell) VALUES($1, $2, $3, $4, $5, $6, $7) returning id;", userName, coinName, quantity, transactionPrice, transactionDate, totalAmount, buySell).Scan(&lastInsertID)
 			checkErr(err)
 
 			if err != nil {

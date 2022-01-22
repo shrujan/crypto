@@ -31,7 +31,7 @@ export class InputFormComponent implements OnInit {
     this.cryptoForm = new FormGroup({
       buySell: new FormControl(),
       coinName: new FormControl(''),
-      purchaseDate: new FormControl(),
+      transactionDate: new FormControl(),
       transactionPrice: new FormControl(),
       quantity: new FormControl(),
       totalAmount: new FormControl(),
@@ -46,7 +46,7 @@ export class InputFormComponent implements OnInit {
     const param = {
       "buySell":          cryptoData.buySell,
       "coinName":         (cryptoData.coinName).toLowerCase(),
-      "purchaseDate":     cryptoData.purchaseDate || 'N/A',
+      "transactionDate":     cryptoData.transactionDate || 'N/A',
       "quantity":         cryptoData.quantity,
       "totalAmount":      cryptoData.totalAmount || (parseInt(cryptoData.quantity) * parseInt(cryptoData.transactionPrice)),
       "transactionPrice": cryptoData.transactionPrice,
