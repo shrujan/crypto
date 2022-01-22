@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { DashboardService } from '../services/dashboard/dashboard.service';
 
 @Component({
@@ -15,7 +15,6 @@ export class InputFormComponent implements OnInit {
 
   constructor(
     private dashboardService: DashboardService,
-    private formBuilder: FormBuilder,
   ) {
       this.dashboardService.getUsers().subscribe(userList => {
         this.userList = userList;
@@ -30,12 +29,14 @@ export class InputFormComponent implements OnInit {
 
   initializeForm() {
     this.cryptoForm = new FormGroup({
-      userName: new FormControl(''),
+      buySell: new FormControl(),
       coinName: new FormControl(''),
-      quantity: new FormControl(),
-      purchasePrice: new FormControl(),
       purchaseDate: new FormControl(),
-      totalAmount: new FormControl()
+      purchasePrice: new FormControl(),
+      quantity: new FormControl(),
+      totalAmount: new FormControl(),
+      userName: new FormControl(''),
+
     })
   }
 
@@ -43,6 +44,7 @@ export class InputFormComponent implements OnInit {
     const cryptoData = this.cryptoForm.value;
     console.log(cryptoData)
     const param = {
+      "buySell": cryptoData.buySell,
       "userName": (cryptoData.userName.UserName).toLowerCase(),
       "coinName": (cryptoData.coinName).toLowerCase(),
       "quantity": cryptoData.quantity,

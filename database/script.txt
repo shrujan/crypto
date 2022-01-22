@@ -29,7 +29,8 @@ CREATE TABLE IF NOT EXISTS Purchases
     quantity text COLLATE pg_catalog."default",
     purchase_price text COLLATE pg_catalog."default",
     date text COLLATE pg_catalog."default",
-    total_amount text COLLATE pg_catalog."default"
+    total_amount text COLLATE pg_catalog."default",
+    buy_sell text
 )
 
 ===============================

@@ -1,4 +1,4 @@
-<section data-component="purchase-info">
+<section data-component="transaction-info">
   <crypto-header></crypto-header>
   <main>
     <form [formGroup]="cryptoForm">
@@ -19,7 +19,7 @@
         </mat-form-field>
       </div>
       <div>
-        <input matInput type="text" formControlName="purchasePrice" placeholder="Purchased Price">
+        <input matInput type="text" formControlName="purchasePrice" placeholder="Transaction Price">
       </div>
       <div>
         <input matInput type="text" formControlName="quantity" placeholder="Quantity">
@@ -28,7 +28,16 @@
         <input matInput type="text" formControlName="totalAmount" placeholder="Total Rupees">
       </div>
       <div>
-        <input matInput type="text" formControlName="purchaseDate" placeholder="purchaseDate">
+        <input matInput type="text" formControlName="purchaseDate" placeholder="Transaction Date">
+      </div>
+      <div>
+        <mat-form-field>
+          <mat-label>Transaction Type</mat-label>
+          <mat-select formControlName="buySell">
+            <mat-option value="buy">Buy</mat-option>
+            <mat-option value="sell">Sell</mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
       <div>
         <button (click)="saveDetails()">Save</button>
