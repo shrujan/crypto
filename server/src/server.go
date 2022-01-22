@@ -34,13 +34,13 @@ type JsonResponse struct {
 }
 
 type CryptoInfo struct {
-	CoinName      string `json:"coinName"`
-	PurchaseDate  string `json:"purchaseDate"`
-	PurchasePrice string `json:"purchasePrice"`
-	Quantity      string `json:"quantity"`
-	TotalAmount   string `json:"totalAmount"`
-	UserName      string `json:"userName"`
-	BuySell       string `json:"buySell"`
+	CoinName         string `json:"coinName"`
+	PurchaseDate     string `json:"purchaseDate"`
+	TransactionPrice string `json:"transactionPrice"`
+	Quantity         string `json:"quantity"`
+	TotalAmount      string `json:"totalAmount"`
+	UserName         string `json:"userName"`
+	BuySell          string `json:"buySell"`
 }
 
 type FavCoin struct {
@@ -107,19 +107,19 @@ func getAllPurchases(w http.ResponseWriter, r *http.Request) {
 	checkErr(err)
 
 	for rows.Next() {
-		var userName, coinName, quantity, purchasePrice, totalAmount string
+		var userName, coinName, quantity, transactionPrice, totalAmount string
 
-		err := rows.Scan(&userName, &coinName, &quantity, &purchasePrice, &totalAmount)
+		err := rows.Scan(&userName, &coinName, &quantity, &transactionPrice, &totalAmount)
 
 		fmt.Println(userName)
 		checkErr(err)
 
 		purchase := CryptoInfo{
-			UserName:      userName,
-			CoinName:      coinName,
-			Quantity:      quantity,
-			PurchasePrice: purchasePrice,
-			TotalAmount:   totalAmount,
+			UserName:         userName,
+			CoinName:         coinName,
+			Quantity:         quantity,
+			TransactionPrice: transactionPrice,
+			TotalAmount:      totalAmount,
 		}
 
 		purchases = append(purchases, purchase)
@@ -393,19 +393,19 @@ func main() {
 		userName := cryptInfo.UserName
 		coinName := cryptInfo.CoinName
 		quantity := cryptInfo.Quantity
-		purchasePrice := cryptInfo.PurchasePrice
+		transactionPrice := cryptInfo.TransactionPrice
 		purchaseDate := cryptInfo.PurchaseDate
 		totalAmount := cryptInfo.TotalAmount
 		buySell := cryptInfo.BuySell
 		fmt.Println("==============================")
 
-		if userName == "" || coinName == "" || quantity == "" || purchasePrice == "" || purchaseDate == "" || totalAmount == "" || buySell == "" {
+		if userName == "" || coinName == "" || quantity == "" || transactionPrice == "" || purchaseDate == "" || totalAmount == "" || buySell == "" {
 			response = JsonResponse{Type: "error", Message: "You are missing important parameter."}
 		} else {
-			fmt.Println("user: " + userName + " purchased : " + quantity + coinName + " for " + purchasePrice + " on " + purchaseDate)
+			fmt.Println("user: " + userName + " purchased : " + quantity + coinName + " for " + transactionPrice + " on " + purchaseDate)
 
 			var lastInsertID int
-			err := db.QueryRow("INSERT INTO purchases(user_name, coin_name, quantity, purchase_price, date, total_amount, buy_sell) VALUES($1, $2, $3, $4, $5, $6, $7) returning id;", userName, coinName, quantity, purchasePrice, purchaseDate, totalAmount, buySell).Scan(&lastInsertID)
+			err := db.QueryRow("INSERT INTO purchases(user_name, coin_name, quantity, purchase_price, date, total_amount, buy_sell) VALUES($1, $2, $3, $4, $5, $6, $7) returning id;", userName, coinName, quantity, transactionPrice, purchaseDate, totalAmount, buySell).Scan(&lastInsertID)
 			checkErr(err)
 
 			if err != nil {

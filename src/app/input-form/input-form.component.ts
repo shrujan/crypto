@@ -32,7 +32,7 @@ export class InputFormComponent implements OnInit {
       buySell: new FormControl(),
       coinName: new FormControl(''),
       purchaseDate: new FormControl(),
-      purchasePrice: new FormControl(),
+      transactionPrice: new FormControl(),
       quantity: new FormControl(),
       totalAmount: new FormControl(),
       userName: new FormControl(''),
@@ -44,13 +44,13 @@ export class InputFormComponent implements OnInit {
     const cryptoData = this.cryptoForm.value;
     console.log(cryptoData)
     const param = {
-      "buySell": cryptoData.buySell,
-      "userName": (cryptoData.userName.UserName).toLowerCase(),
-      "coinName": (cryptoData.coinName).toLowerCase(),
-      "quantity": cryptoData.quantity,
-      "purchasePrice": cryptoData.purchasePrice,
-      "purchaseDate": cryptoData.purchaseDate || 'N/A',
-      "totalAmount": cryptoData.totalAmount || (parseInt(cryptoData.quantity) * parseInt(cryptoData.purchasePrice))
+      "buySell":          cryptoData.buySell,
+      "coinName":         (cryptoData.coinName).toLowerCase(),
+      "purchaseDate":     cryptoData.purchaseDate || 'N/A',
+      "quantity":         cryptoData.quantity,
+      "totalAmount":      cryptoData.totalAmount || (parseInt(cryptoData.quantity) * parseInt(cryptoData.transactionPrice)),
+      "transactionPrice": cryptoData.transactionPrice,
+      "userName":         (cryptoData.userName.UserName).toLowerCase(),
     }
 
     this.dashboardService.saveCryptoInfo(param).subscribe(res => {
