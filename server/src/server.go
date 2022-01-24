@@ -101,15 +101,15 @@ func getAllPurchases(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("============= name  =================" + name)
 
-	query := `select user_name, coin_name, quantity, purchase_price, total_amount from Purchases where user_name = $1`
+	query := `select user_name, coin_name, quantity, purchase_price, total_amount, buy_sell from Purchases where user_name = $1`
 
 	rows, err := DB.Query(query, name)
 	checkErr(err)
 
 	for rows.Next() {
-		var userName, coinName, quantity, transactionPrice, totalAmount string
+		var userName, coinName, quantity, transactionPrice, totalAmount, buySell string
 
-		err := rows.Scan(&userName, &coinName, &quantity, &transactionPrice, &totalAmount)
+		err := rows.Scan(&userName, &coinName, &quantity, &transactionPrice, &totalAmount, &buySell)
 
 		fmt.Println(userName)
 		checkErr(err)
@@ -120,6 +120,7 @@ func getAllPurchases(w http.ResponseWriter, r *http.Request) {
 			Quantity:         quantity,
 			TransactionPrice: transactionPrice,
 			TotalAmount:      totalAmount,
+			BuySell:          buySell,
 		}
 
 		purchases = append(purchases, purchase)
