@@ -13,20 +13,25 @@ Front end (Angular)
     Run `ng serve`
 
 Server
+
     Run `go run server.go`
 
 Feature 1 - International Dashboard
+
     - This dashboard gives you an idea about the coins and their Global Prices
 
 Feature 2 - Favorite Coins
+
     - Go to favorite coins
     - Compare your favorite coin prices internationally and locally.
 
-Feature 3 - Purchased coin Input Form 
+Feature 3 - Purchased coin Input Form
+
     - Enter the coins purchased 
     - Enter the prices of coins purchased
 
 Feature 4 - Portfolio
+
     This dashboard gives you a detailed report about
         - Coins purchased
         - Average per coin
