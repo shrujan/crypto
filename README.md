@@ -35,6 +35,6 @@ Feature 4 - Portfolio
         - Total Amount Spent
         - Purchased Quantity
 
-Conclusion 
+Conclusion
 
 This is a handy tool designed to help the users keep a track of their crypto assets.
