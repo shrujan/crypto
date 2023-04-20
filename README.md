@@ -1,27 +1,40 @@
-# Crypto
+Title: Personal Crypto Dashboard and Tracker
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.1.0.
+Introduction:
 
-## Development server
+During the recent boom in the crypto market, the prices for a coin were different in India and Internationally. This dashboard gave the users a side by side comparison between the prices of their coins locally and internationally. Also, this allows the users to enter their purchase information and keep a track of the profit or loss of their assets.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Installation:
 
-## Code scaffolding
+Front end (Angular)
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+    Clone the project to your local system
+    Run `npm install`
+    Run `ng serve`
 
-## Build
+Server
+    Run `go run server.go`
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Feature 1 - International Dashboard
+    - This dashboard gives you an idea about the coins and their Global Prices
 
-## Running unit tests
+Feature 2 - Favorite Coins
+    - Go to favorite coins
+    - Compare your favorite coin prices internationally and locally.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Feature 3 - Purchased coin Input Form 
+    - Enter the coins purchased 
+    - Enter the prices of coins purchased
 
-## Running end-to-end tests
+Feature 4 - Portfolio
+    This dashboard gives you a detailed report about
+        - Coins purchased
+        - Average per coin
+        - Current International Price
+        - Current Indian Price
+        - Total Amount Spent
+        - Purchased Quantity
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+Conclusion 
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+This is a handy tool designed to help the users keep a track of their crypto assets.
