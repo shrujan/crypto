@@ -42,4 +42,4 @@ Feature 4 - Portfolio
 
 Conclusion
 
-This is a handy tool designed to help the users keep a track of their crypto assets.
+This is a handy tool designed to help the users keep a track of their crypto assets, Investments and Profit and losses incurred.
